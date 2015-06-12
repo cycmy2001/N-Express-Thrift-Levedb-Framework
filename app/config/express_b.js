@@ -1,6 +1,5 @@
 "use strict";
 var path = require('path');
-var fs = require('fs');
 var bodyParser=require('body-parser');
 var expressSession=require('express-session');
 var uuid=require('node-uuid');
@@ -22,7 +21,6 @@ module.exports = function (app, express) {
 
     app.locals.appinfo = app.config.appinfo;
     app.locals.lodash   = lodash;
-    app.locals.menuNavItem   = [];
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -56,25 +54,7 @@ module.exports = function (app, express) {
             }
         }
     });
-    
-    // Initialize controllers
-    (function requireControllers(dir, params) {
-        fs.readdirSync(dir).forEach(function (file) {
-            console.log(file)
-            // Do not process system files or dirs (started with ".")
-            if (file.match(/^\./)) {
-                return;
-            }
-            // Get stats for each file
-            var stats = fs.statSync(path.join(dir, file));
-            if (stats.isFile()) {
-                // Require controller
-                require(path.join(dir, file)).apply(null, params);
-            }
-            else if (stats.isDirectory()) {
-                // Recursive require controllers in sub-directories
-                requireControllers(path.join(dir, file), params);
-            }
-        });
-    })(path.normalize(__dirname + '/../controllers'), [app]);
+    /** ROUTES Apps */
+    app.use('/',require('../routes/local'));
+
 };
