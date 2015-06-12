@@ -1,0 +1,5 @@
+[
+{"key":"gateway!gateway","value":{"ip":"192.168.3.100","gateway":"192.168.3.1","netmask":"255.255.255.0","thriftPort":9521,"thriftRemoteIp":"0.0.0.0","thriftRemotePort":9522,"type":"Gateway"}}
+,
+{"key":"gateway!user","value":{"password":"4202c1c75c27d4f12868482fcfe479be","type":"User"}}
+]

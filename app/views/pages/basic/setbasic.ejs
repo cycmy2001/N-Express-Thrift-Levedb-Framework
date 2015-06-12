@@ -1,0 +1,162 @@
+<% layout('../../partials/pages-layout') %>
+<div class="page-content">
+    <div class="page-header"></div><!-- /.page-header -->
+    <div class="row">
+        <div class="col-xs-12">
+                <form id="frmBasic" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="ip" class="col-xs-12 col-sm-3 control-label no-padding-right"> IP地址: </label>
+                        <div class="col-xs-12 col-sm-5">
+                            <input type="text" class="width-100" name="ip" id="ip" maxlength="15" value="<%=ip%>" placeholder="IP地址" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="netmask" class="col-xs-12 col-sm-3 control-label no-padding-right"> 子网掩码: </label>
+                        <div class="col-xs-12 col-sm-5">
+                            <input type="text" class="width-100" name="netmask" id="netmask" maxlength="15" value="<%=netmask%>" placeholder="子网掩码" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gateway" class="col-xs-12 col-sm-3 control-label no-padding-right"> 默认路由: </label>
+                        <div class="col-xs-12 col-sm-5">
+                            <input type="text" class="width-100" name="gateway" id="gateway" maxlength="15" value="<%=gateway%>" placeholder="默认路由" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="thriftPort" class="col-xs-12 col-sm-3 control-label no-padding-right"> 通讯端口: </label>
+                        <div class="col-xs-12 col-sm-5">
+                            <input type="text" class="width-100" name="thriftPort" id="thriftPort" maxlength="5" value="<%=thriftPort%>" placeholder="通讯端口" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="thriftRemoteIp" class="col-xs-12 col-sm-3 control-label no-padding-right"> 远端通讯IP地址: </label>
+                        <div class="col-xs-12 col-sm-5">
+                            <input type="text" class="width-100" name="thriftRemoteIp" id="thriftRemoteIp" maxlength="15" value="<%=thriftRemoteIp%>" placeholder="远端通讯IP地址" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="thriftRemotePort" class="col-xs-12 col-sm-3 control-label no-padding-right"> 远端通讯端口: </label>
+                        <div class="col-xs-12 col-sm-5">
+                            <input type="text" class="width-100" name="thriftRemotePort" id="thriftRemotePort" maxlength="5" value="<%=thriftRemotePort%>" placeholder="远端通讯端口" />
+                        </div>
+                    </div>
+                    <div class="clearfix form-actions">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button id="setBtn" class="btn btn-info" type="button">
+                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                修改
+                            </button>
+                        </div>
+                    </div>
+                </form>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
+<script src="/assets/js/jquery.validate.js"></script>
+<script>
+    jQuery(function($) {
+        $.validator.addMethod("ip", ipReg);
+        $.validator.addMethod("netmask", ipReg);
+        $.validator.addMethod("gateway", ipReg);
+        $.validator.addMethod("thriftPort", integerReg);
+        $.validator.addMethod("thriftRemoteIp", ipReg);
+        $.validator.addMethod("thriftRemotePort", integerReg);
+        $('#setBtn').on('click', function(e) {
+            if(!$('#frmBasic').valid()) return;
+            if(confirm("修改信息后会自动重新启动网关,是否继续修改?")){
+                var params ={
+                    updData:JSON.stringify({
+                        ip: $("#ip").val(),
+                        netmask: $("#netmask").val(),
+                        gateway: $("#gateway").val(),
+                        thriftPort: $("#thriftPort").val(),
+                        thriftRemoteIp: $("#thriftRemoteIp").val(),
+                        thriftRemotePort: $("#thriftRemotePort").val()
+                    })
+                };
+                ajaxPost("/ses/updbasic",params,function (data) {
+                    if(data.error){
+                        alert(data.error);
+                    }else{
+                        if(data.goto){
+                            location.href = data.goto;
+                        }else{
+                            alert(data.info);
+                        }
+                    }
+                });
+            }
+            e.preventDefault();
+        });
+
+        $('#frmBasic').validate({
+            errorElement: 'div',
+            errorClass: 'help-block',
+            focusInvalid: false,
+            ignore: "",
+            rules: {
+                ip: {
+                    required: true,
+                    ip: 'required'
+                },
+                netmask: {
+                    required: true,
+                    netmask: 'required'
+                },
+                gateway: {
+                    required: true,
+                    gateway: 'required'
+                },
+                thriftPort: {
+                    required: true,
+                    thriftPort: 'required'
+                },
+                thriftRemoteIp: {
+                    required: true,
+                    thriftRemoteIp: 'required'
+                },
+                thriftRemotePort: {
+                    required: true,
+                    thriftRemotePort: 'required'
+                }
+            },
+            messages: {
+                ip: {
+                    required: "请输入IP地址.",
+                    ip: "IP地址格式不正确."
+                },
+                netmask: {
+                    required: "请输入子网掩码.",
+                    netmask: "子网掩码格式不正确."
+                },
+                gateway: {
+                    required: "请输入默认路由.",
+                    gateway: "默认路由格式不正确."
+                },
+                thriftPort: {
+                    required: "请输入通讯端口.",
+                    thriftPort: "通讯端口格式不正确."
+                },
+                thriftRemoteIp: {
+                    required: "请输入远端通讯IP地址.",
+                    thriftRemoteIp: "远端通讯IP地址格式不正确."
+                },
+                thriftRemotePort: {
+                    required: "请输入远端通讯端口.",
+                    thriftRemotePort: "远端通讯端口格式不正确."
+                }
+            },
+            highlight: function (e) {
+                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+            },
+            success: function (e) {
+                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                $(e).remove();
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent());
+            }
+        });
+
+    });
+</script>

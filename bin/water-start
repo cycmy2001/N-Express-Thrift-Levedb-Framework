@@ -1,0 +1,8 @@
+#!/bin/sh
+
+BINPATH=$NODE_WATER_HOME/bin
+WWW=$BINPATH/www
+LOG=$BINPATH/node-log
+
+node --harmony --gc_global --gc_interval=5 --nouse-idle-notification --expose-gc --trace-gc --trace-gc-verbose $WWW | $LOG true 1 &
+echo "node water is started"

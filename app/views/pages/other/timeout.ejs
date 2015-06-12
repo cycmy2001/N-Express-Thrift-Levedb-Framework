@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head><% include ../../partials/head %></head>
+<body class="no-skin">
+<div class="main-container">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <!-- #section:pages/error -->
+                        <div class="error-container">
+                            <div class="well">
+                                <h1 class="grey lighter smaller">
+                                    <span class="blue bigger-125">
+                                        <i class="ace-icon fa fa-exclamation-circle"></i>
+                                    </span>
+                                    系统超时，请重新登陆
+                                </h1>
+                                <hr/>
+                                <h3 class="lighter smaller">
+                                    系统将会在<strong id="endtime"></strong>秒后跳转到登陆页！
+                                </h3>
+                                <div class="space"></div>
+                                <hr/>
+                                <div class="space"></div>
+                                <div class="center">
+                                    <a href="javascript:gotologout()" class="btn btn-primary">
+                                        <i class="ace-icon glyphicon glyphicon-share"></i>
+                                        直接登录
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /section:pages/error -->
+                        <!-- PAGE CONTENT ENDS -->
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    var i = 10;
+                    function remainTime(){
+                        if(i==0){
+                            gotologout();
+                        }
+                        document.getElementById('endtime').innerHTML=i--;
+                        setTimeout("remainTime()",1000);
+                    }
+                    function gotologout(){
+                        ajaxPost("/logout",{},function (data) {
+                            if(data.goto){
+                                window.parent.location.href=data.goto;
+                            }else{
+                                window.parent.location.href='/';
+                            }
+                        });
+                    }
+                    remainTime();
+                </script>
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+</div><!-- /.main-container -->
+</body>
+</html>

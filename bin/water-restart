@@ -1,0 +1,6 @@
+#!/bin/sh
+
+BINPATH=$NODE_WATER_HOME/bin
+
+$BINPATH/water-stop
+$BINPATH/water-start

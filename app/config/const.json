@@ -1,0 +1,6 @@
+{
+  "expose_gc_time": 30000,
+  "pm2_log_flush_time": 180000,
+  "level_gateway_db": "/root/arm/leveldata/gateway.db",
+  "level_protocol_db": "/root/arm/leveldata/protocol.db"
+}

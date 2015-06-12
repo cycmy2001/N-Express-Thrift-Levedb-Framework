@@ -1,0 +1,10 @@
+#!/bin/sh
+#pgrep node | while read line
+ps -e | grep node | grep -v "grep" | awk '{print $1}' | while read line;
+do
+    echo $line
+    kill -9 $line
+done
+echo "node water is stopped"
+
+

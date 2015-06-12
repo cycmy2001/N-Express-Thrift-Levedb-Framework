@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head><% include ../../partials/head %></head>
+<body class="no-skin">
+<div class="main-container">
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="widget-box">
+                            <div class="widget-header widget-header-flat">
+                                <h2 class="widget-title smaller">欢迎使用新中新水控网关</h2>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <ul>
+                                        <li><h4>首次使用,需要初始化网关数据</h4></li>
+                                        <li><h4>初始化数据后,网关的初始默认密码：admin,为了安全考虑建议进入系统后,在右上角“密码修改”处进行修改.</h4></li>
+                                        <li><h4>尽量不要频繁对网关的基本信息进行修改.修改时,务必保证没有数据交互,以防数据丢失.</h4></li>
+                                    </ul>
+                                    <div id="progressbar"></div>
+                                </div>
+                            </div>
+                            <div class="space"></div>
+                            <div class="center">
+                                <button class="btn btn-success btn-block" id="btnInitial">初始化数据</button>
+                            </div>
+                            <div class="space"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+</div><!-- /.main-container -->
+<script>
+    jQuery(function($) {
+        var current_value = 0;
+        function progressbar_change() {
+            $("#progressbar").progressbar({
+                    value: current_value++,
+                    create: function( event, ui ) {
+                        $(this).addClass('progress progress-striped active')
+                                .children(0).addClass('progress-bar progress-bar-success');
+                    }
+                });
+            if(current_value <= 100) {
+                setInterval(progressbar_change(), 1000);
+            }
+        }
+        $('#btnInitial').on('click', function(e) {
+            e.preventDefault();
+            if(confirm('是否初始化数据?')){
+                $(this).addClass('disabled hide');
+                progressbar_change()
+                var params ={flag:'initial'};
+                ajaxPost("/initialData",params,function (data) {
+                    if(data.error){
+                        alert(data.error);
+                        location.href = '/';
+                    }else{
+                        setTimeout(function(){
+                            current_value=100;
+                            alert(data.info);
+                            location.href = data.goto;
+                        },2000);
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<div id="navbar" class="navbar navbar-default">
+    <script type="text/javascript">
+        try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+        $(document).ready(function(){
+        });
+        function doLogout(){
+            if(confirm("是否退出?")){
+                ajaxPost("/logout",{},function (data) {
+                    if(data.goto){
+                        location.href = data.goto;
+                    }else{
+                        location.href = '/'
+                    }
+                });
+            }
+        }
+        function goto(url,nav){
+            url='/menu'+url+'?nav='+encodeURIComponent(nav);
+            $("#iframepage").attr("src",url);
+        }
+    </script>
+    <div class="navbar-container" id="navbar-container">
+        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+            <span class="sr-only">Toggle sidebar</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <div class="navbar-header pull-left">
+            <div class="navbar-brand">
+                <small>
+                    <i class="fa fa-random"></i>
+                    Synjones Water Gateway
+                </small>
+            </div>
+        </div>
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav">
+                <li class="light-blue">
+                    <a href="javascript:goto('/user/updpwd','修改密码')">
+                        <i class="ace-icon fa fa-lock"></i> 密码修改
+                    </a>
+                </li>
+                <li class="light-blue">
+                    <a href="javascript:doLogout();">
+                        <i class="ace-icon fa fa-power-off"></i> 退出
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div><!-- /.navbar-container -->
+</div>
